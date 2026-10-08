@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Le Conditionnel - Towenou Honoré</title>
+<style>
+:root{--ink:#1a1a1a;--yellow:#ffbe0b;--red:#e63946;--sh:rgba(0,0,0,.15)}
+*{box-sizing:border-box}body{margin:0;background:#f6f1e6;color:var(--ink);font-family:Georgia,serif}
+.header{background:var(--ink);color:#fff;padding:26px 16px;text-align:center}
+.header img{width:120px;height:120px;border-radius:50%;border:4px solid var(--yellow);object-fit:cover}
+.header h1{margin:10px 0 0;font-family:system-ui}
+.badge{display:inline-block;background:var(--yellow);color:var(--ink);padding:6px 12px;border-radius:999px;font-weight:900;border:2px solid var(--ink);margin-top:8px;font-family:system-ui}
+.wrap{max-width:900px;margin:auto;padding:12px}
+.card{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:18px;margin:14px 0;box-shadow:5px 5px 0 var(--sh)}
+.btn{padding:11px 16px;border:2px solid var(--ink);border-radius:10px;background:var(--ink);color:#fff;font-weight:900;cursor:pointer;font-family:system-ui}
+.btn.live{background:var(--red)}
+#honore-assistant{position:fixed;bottom:14px;right:10px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:8px;font-family:system-ui}
+#honore-bubble{max-width:300px;background:#fff;border:2px solid var(--ink);border-radius:16px 16px 2px 16px;padding:10px 12px;display:none}
+#honore-bubble.show{display:block}
+#honore-panel{width:92vw;max-width:370px;background:#fff;border:2px solid var(--ink);border-radius:12px;padding:12px;display:none}
+#honore-panel.show{display:block}
+#honore-panel input{width:100%;padding:10px;border:2px solid var(--ink);border-radius:8px}
+#honore-btn{display:flex;gap:8px;align-items:center;padding:12px 16px;border:2px solid var(--ink);border-radius:999px;background:var(--ink);color:#fff;font-weight:900;box-shadow:4px 4px 0 var(--red);cursor:pointer}
+</style>
+</head>
+<body>
+<div class="header">
+<img src="honore.jpg" alt="Towenou Djiedjom Honoré">
+<h1>📚 Le Conditionnel</h1>
+<p>Par <b>Towenou Djiedjom Honoré</b> — Kara, Togo</p>
+<div class="badge">🎤 ASSISTANT VOCAL LIVE</div>
+</div>
+<div class="wrap">
+<div class="card" style="background:#eef2ff;border-style:dashed">👨‍🎓 Bonjour! C'est moi Honoré sur la photo. J'ai créé cette app pour vous aider.</div>
+<div class="card"><h2>1. Le conditionnel présent</h2><p>Radical du futur + ais, ais, ait, ions, iez, aient → je parlerais</p></div>
+<div class="card"><h2>2. Règle d'or</h2><p style="color:#e63946;font-weight:900">⚠️ JAMAIS de conditionnel après SI!</p></div>
+</div>
+<div id="honore-assistant">
+<div id="honore-bubble"></div>
+<div id="honore-panel">
+<input id="honore-q" placeholder="Pose ta question...">
+<div style="display:flex;gap:6px;margin-top:8px">
+<button class="btn" onclick="askHonore()">Demander 🔊</button>
+<button class="btn live" onclick="startLive()">🎤 LIVE</button>
+</div>
+<button class="btn" style="background:#fff;color:var(--ink);width:100%;margin-top:8px" onclick="togglePanel()">Fermer</button>
+<div id="honore-ans" style="margin-top:8px"></div>
+</div>
+<button id="honore-btn" onclick="togglePanel()">🎤 Assistant Honoré LIVE</button>
+</div>
+<script>
+const bubble=document.getElementById('honore-bubble'),panel=document.getElementById('honore-panel');let first=true;
+function parler(t){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang="fr-FR";u.rate=0.92;speechSynthesis.speak(u);bubble.textContent=t;bubble.classList.add('show');}
+function togglePanel(){panel.classList.toggle('show');if(panel.classList.contains('show')&&first){first=false;setTimeout(()=>parler("Bonjour! Je suis l'assistant vocal de Towenou Djiedjom Honoré, le jeune que vous voyez en photo depuis Kara au Togo!"),400);}}
+function getRep(q){q=q.toLowerCase();if(q.includes("qui")||q.includes("honoré")||q.includes("photo")||q.includes("crée"))return"C'est moi, Towenou Djiedjom Honoré, vous voyez ma photo en haut. J'ai créé cette application depuis Kara au Togo.";if(q.includes("si"))return"Règle d'or: jamais de conditionnel après Si. On dit Si j'avais, je ferais.";return"Le conditionnel c'est le mode du souhait: je voudrais, j'aimerais.";}
+function askHonore(l){let q=(l||document.getElementById('honore-q').value).trim();if(!q)return;let r=getRep(q);document.getElementById('honore-ans').innerHTML="<div><b>Toi:</b> "+q+"<br><b>Honoré:</b> "+r+"</div>"+document.getElementById('honore-ans').innerHTML;parler(r);}
+function startLive(){let SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=new SR();rec.lang="fr-FR";panel.classList.add('show');parler("Je t'écoute!");rec.start();rec.onresult=e=>askHonore(e.results[0][0].transcript)}
+window.addEventListener('load',()=>setTimeout(()=>{bubble.classList.add('show');parler("Bienvenue sur l'app de Towenou Djiedjom Honoré!");},1000));
+</script>
+</body>
+</html>
